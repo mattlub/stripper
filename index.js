@@ -134,37 +134,10 @@ const posts = []
 	  		.find(a => a.querySelector('span') && a.querySelector('span').textContent === 'See more posts')
 	  	seeMore.click()
 	  })
+  // end of loop
   }
+
   // await page.screenshot({path: 'digg.png', fullPage: true})
   
   await browser.close()
 })()
-
-const scrapeListPage = () => {
-	const storyLinks = querySelectArray('a').filter(a => a.textContent === 'Full Story')
-	const seeMoreLink = querySelectArray('a').find(a => maybeFindText(a, 'span') === 'See more posts')
-	// loop through the links
-	// click the link
-	seeMoreLink.click()
-}
-
-const scrapePostPage = () => {
-	const post = {
-		title: maybeFindText('h3'),
-		text: maybeFindText('.bp > p'),
-		likes: maybeFindText('.co .cs'),
-		date: maybeFindText('.bq abbr')
-	}
-
-	const comments =
-		querySelectArray('div.ct')
-		.map(c => ({
-			author: maybeFindText('h3 > a'),
-			content: maybeFindText('.cv'),
-			likes: maybeFindText('.cx .db')
-		}))
-	
-	return {
-		post, comments
-	}
-}
