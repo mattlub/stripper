@@ -5,7 +5,6 @@ const { email, pass } = require('./secrets')
 
 const GROUP_PAGE_URL = 'https://mbasic.facebook.com/groups/228761190470008?bacr=1519989551%3A1839721619373949%3A1839721619373949%2C0%3A7%3A&multi_permalinks&refid=18'
 const BASE_URL = 'https://mbasic.facebook.com'
-
 const NUM_PAGES = 1
 
 const posts = []
@@ -50,7 +49,7 @@ const posts = []
 	  	// console.log(link)
 	  	await detailPage.goto(link)
 	  	await detailPage.screenshot({path: 'example.png'})
-	  	const res = await detailPage.evaluate(() => {
+	  	const post = await detailPage.evaluate(() => {
 	  		const querySelectArray = selector => Array.prototype.slice.call(document.querySelectorAll(selector))
 	  		const maybeFindText = function(inside, selector) {
 					const [ins , sel] = arguments.length === 2 
@@ -109,16 +108,17 @@ const posts = []
 					.filter(c => !(c.author === null && c.content === null))
 				
 				return {
-					post, comments
+					...post,
+					comments
 				}
 	  	})
 	  	// log 
 	  	const vital = {
 	  		link,
-	  		title: res.post.title,
-	  		text: res.post.text,
-	  		commenter: res.comments[0] && res.comments[0].author,
-	  		comment: res.comments[0] && res.comments[0].content
+	  		title: post.title,
+	  		text: post.text,
+	  		commenter: post.comments[0] && post.comments[0].author,
+	  		comment: post.comments[0] && post.comments[0].content
 	  	}
 
 	  	if (Object.values(vital).some(val => !val)) {
